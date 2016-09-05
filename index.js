@@ -4,9 +4,6 @@ var pull = require('pull-stream')
 var toPull = require('stream-to-pull-stream')
 var URL = require('url')
 
-//pull stream that ends immediately.
-function empty (_, cb) { cb(true) }
-
 var request = exports = module.exports = function (opts, cb) {
   if(opts.url) {
     var _opts = URL.parse(opts.url)
@@ -49,7 +46,7 @@ exports.duplex = function (opts, cb) {
 }
 
 exports.source = function (opts) {
-  return pull(empty, exports.duplex(opts))
+  return pull(pull.empty(), exports.duplex(opts))
 }
 
 exports.sink = function (opts, cb) {
@@ -77,6 +74,6 @@ exports.async = function (opts, cb) {
   //if cb is not provided, turn into a continuable.
   if(!cb) return function (cb) { exports.async(opts, cb) }
 
-  pull(empty, exports.sink(opts, cb))
+  pull(pull.empty(), exports.sink(opts, cb))
 }
 

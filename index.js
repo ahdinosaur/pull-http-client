@@ -59,7 +59,8 @@ exports.sink = function (opts, cb) {
         if(opts.json) {
           try {
             body = JSON.parse(body.toString())
-          } catch (err) {
+          } catch (parseError) {
+            var err = new Error('expected JSON body. got: ' + body.toString())
             return cb(err)
           }
           return cb(null, body)
